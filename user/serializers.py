@@ -13,7 +13,15 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
-
+        
+        ''' check is email unique '''
+        email = data['email'].lower()
+        is_email_unique = User.objects.filter(email = email).count()
+        if (is_email_unique > 0):
+            raise serializers.ValidationError({
+                'message' : 'email not unique'
+            })
+        
         ''' check if password less than 8 character '''
         if len(data['password']) < 8:
             raise serializers.ValidationError({
@@ -28,6 +36,9 @@ class UserSerializer(serializers.ModelSerializer):
 
         ''' delete password2 field from serializer data '''
         data.pop('password2', None)
+
+        ''' lowercase the username '''
+        data['username'] = data['username'].lower()
 
         return data
 
