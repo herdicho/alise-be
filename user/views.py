@@ -4,7 +4,22 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from drf_yasg.utils import swagger_auto_schema
+
 class UserRegister(APIView):
+
+    #success = Response({"error": ["You don't have enough permission."]})
+    @swagger_auto_schema(
+            #auto_schema= CustomSwaggerAutoSchema,
+            query_serializer=UserSerializer,
+            responses={
+                '201': "Success",
+                '400': "Bad Request"
+            },
+            security=[],
+            operation_id='Magic Endpoint',
+            operation_description='This endpoint does some magic',
+        )
     
     def post(self, request, format=None):
         serializer = UserSerializer(data=request.data)
